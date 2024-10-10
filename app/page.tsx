@@ -84,10 +84,10 @@ interface PaymentCallback {
   respMessage: string
 }
 
-interface PaymentResultDTO {
-  connectorCode: string
-  message: string
-}
+// interface PaymentResultDTO {
+//   connectorCode: string
+//   message: string
+// }
 
 export default function BillPaymentDemo() {
   const [services, setServices] = useState<Service[]>([])
