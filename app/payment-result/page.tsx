@@ -32,6 +32,7 @@ export default function PaymentResultPage() {
   const searchParams = useSearchParams()
 
   useEffect(() => {
+    
     const referenceText = searchParams.get('referenceText')
     if (!referenceText) {
       setError('No reference text provided')
@@ -41,7 +42,8 @@ export default function PaymentResultPage() {
 
     const fetchPaymentResult = async () => {
       try {
-        const response = await fetch(`/api/payment-callback?transactionId=${referenceText}`)
+        const response = await fetch(`/api/payment-callback?referenceText=${referenceText}`)
+        console.log(JSON.stringify(response))
         if (response.ok) {
           const data = await response.json()
           setPaymentResult(data)
