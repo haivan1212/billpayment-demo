@@ -24,7 +24,6 @@ interface PaymentCallback {
   respMessage: string
 }
 
-
 export default function PaymentResultPage() {
   const [paymentResult, setPaymentResult] = useState<PaymentCallback | null>(null)
   const [loading, setLoading] = useState(true)
@@ -32,7 +31,6 @@ export default function PaymentResultPage() {
   const searchParams = useSearchParams()
 
   useEffect(() => {
-    
     const referenceText = searchParams.get('referenceText')
     if (!referenceText) {
       setError('No reference text provided')
@@ -40,29 +38,40 @@ export default function PaymentResultPage() {
       return
     }
 
+    let attempts = 0
+    const maxAttempts = 30 // Try for about 1 minute (30 * 2 seconds)
+
     const fetchPaymentResult = async () => {
       try {
         const response = await fetch(`/api/payment-callback?referenceText=${referenceText}`)
-        console.log(JSON.stringify(response))
         if (response.ok) {
           const data = await response.json()
           setPaymentResult(data)
           setLoading(false)
         } else if (response.status === 404) {
-          // If result not found, continue polling
-          setTimeout(fetchPaymentResult, 2000)
+          attempts++
+          if (attempts < maxAttempts) {
+            setTimeout(fetchPaymentResult, 2000) // Retry after 2 seconds
+          } else {
+            setError('Payment result not found after multiple attempts. Please check your payment status later.')
+            setLoading(false)
+          }
         } else {
-          setError('Failed to fetch payment result')
-          setLoading(false)
+          throw new Error(`HTTP error! status: ${response.status}`)
         }
       } catch (error) {
         console.error('Error fetching payment result:', error)
-        setError('An error occurred while fetching the payment result')
+        setError('An error occurred while fetching the payment result. Please try refreshing the page.')
         setLoading(false)
       }
     }
 
     fetchPaymentResult()
+
+    // Cleanup function to handle component unmount
+    return () => {
+      attempts = maxAttempts // This will stop any ongoing polling if the component unmounts
+    }
   }, [searchParams])
 
   if (loading) {
@@ -101,7 +110,7 @@ export default function PaymentResultPage() {
           <CardTitle>Payment Result</CardTitle>
         </CardHeader>
         <CardContent>
-          <p>No payment result found. The payment might still be processing.</p>
+          <p>No payment result found. The payment might still be processing. Please check your payment status later.</p>
         </CardContent>
       </Card>
     )
