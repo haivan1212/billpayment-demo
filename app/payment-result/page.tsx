@@ -2,8 +2,10 @@
 
 import { useEffect, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import Link from 'next/link'
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
+import { Button } from "@/components/ui/button"
 
 interface PaymentCallback {
   trxId: string
@@ -24,7 +26,6 @@ interface PaymentCallback {
   respMessage: string
 }
 
-
 export default function PaymentResultPage() {
   const [paymentResult, setPaymentResult] = useState<PaymentCallback | null>(null)
   const [loading, setLoading] = useState(true)
@@ -32,7 +33,6 @@ export default function PaymentResultPage() {
   const searchParams = useSearchParams()
 
   useEffect(() => {
-    
     const referenceText = searchParams.get('referenceText')
     if (!referenceText) {
       setError('No reference text provided')
@@ -90,6 +90,11 @@ export default function PaymentResultPage() {
         <CardContent>
           <p className="text-red-500">{error}</p>
         </CardContent>
+        <CardFooter>
+          <Link href="/" passHref>
+            <Button>Back to Main Page</Button>
+          </Link>
+        </CardFooter>
       </Card>
     )
   }
@@ -103,6 +108,11 @@ export default function PaymentResultPage() {
         <CardContent>
           <p>No payment result found. The payment might still be processing.</p>
         </CardContent>
+        <CardFooter>
+          <Link href="/" passHref>
+            <Button>Back to Main Page</Button>
+          </Link>
+        </CardFooter>
       </Card>
     )
   }
@@ -140,6 +150,11 @@ export default function PaymentResultPage() {
           <dd>{paymentResult.additionalData}</dd>
         </dl>
       </CardContent>
+      <CardFooter>
+        <Link href="/" passHref>
+          <Button>Back to Main Page</Button>
+        </Link>
+      </CardFooter>
     </Card>
   )
 }
