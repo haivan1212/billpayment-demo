@@ -8,7 +8,7 @@ export async function POST(request: Request) {
   // Store the payment result
   paymentResults[body.referenceText] = body
 
-  return NextResponse.json({ status: 'success' })
+  return NextResponse.json({ connectorCode: '00', message: 'Success'})
 }
 
 export async function GET(request: Request) {
