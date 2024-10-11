@@ -6,9 +6,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
 
 interface PaymentCallback {
-  requestId: string
+  trxId: string
   transactionId: string
-  walletId: string
+  referenceText: string
+  userId: string
   serviceCode: string
   providerCode: string
   providerName: string
@@ -31,16 +32,16 @@ export default function PaymentResultPage() {
   const searchParams = useSearchParams()
 
   useEffect(() => {
-    const transactionId = searchParams.get('transactionId')
-    if (!transactionId) {
-      setError('No transaction ID provided')
+    const referenceText = searchParams.get('referenceText')
+    if (!referenceText) {
+      setError('No reference text provided')
       setLoading(false)
       return
     }
 
     const fetchPaymentResult = async () => {
       try {
-        const response = await fetch(`/api/payment-callback?transactionId=${transactionId}`)
+        const response = await fetch(`/api/payment-callback?transactionId=${referenceText}`)
         if (response.ok) {
           const data = await response.json()
           setPaymentResult(data)
@@ -129,8 +130,8 @@ export default function PaymentResultPage() {
           <dd>{paymentResult.serviceCode}</dd>
           <dt className="font-semibold">Provider:</dt>
           <dd>{paymentResult.providerName}</dd>
-          <dt className="font-semibold">Wallet ID:</dt>
-          <dd>{paymentResult.walletId}</dd>
+          <dt className="font-semibold">User ID:</dt>
+          <dd>{paymentResult.userId}</dd>
           <dt className="font-semibold">Bill Address:</dt>
           <dd>{paymentResult.billAddress}</dd>
           <dt className="font-semibold">Additional Data:</dt>

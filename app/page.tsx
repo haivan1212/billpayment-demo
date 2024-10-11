@@ -69,6 +69,7 @@ interface BillDetail {
 interface PaymentCallback {
   trxId: string
   transactionId: string
+  referenceText: string
   userId: string
   serviceCode: string
   providerCode: string
