@@ -206,7 +206,7 @@ export default function BillPaymentDemo() {
         trxId: generateRandomString(16),
         userId: Constant.MERCHANT_USER_ID,
         billNo: billDetails.billNo,
-        billRefNo: selectedBillCycle,
+        billId: selectedBillCycle,
         amount: payAmount,
         inquiryId: billDetails.inquiryId
       })
