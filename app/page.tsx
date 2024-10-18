@@ -67,22 +67,26 @@ interface BillDetail {
 }
 
 interface PaymentCallback {
-  trxId: string
-  transactionId: string
+  mcTrxId: string
+  ofTrxId: string
   referenceText: string
+  trxDate: string
+  createdDate: string
+  merchantCode: string
   userId: string
   serviceCode: string
   providerCode: string
   providerName: string
-  amount: number
+  billAmount: number
+  totalAmount: number
+  feeAmount: number
   billNo: string
   billId: string
   billCycle: string
   billName: string
   billAddress: string
-  additionalData: string
-  respCode: string
-  respMessage: string
+  status: string
+  errorMessage: string
 }
 
 // interface PaymentResultDTO {
@@ -227,17 +231,17 @@ export default function BillPaymentDemo() {
 
   // Callback function for payment notification
   const handlePaymentCallback = (callbackData: PaymentCallback) => {
-    if (callbackData.respCode === '00') {
+    if (callbackData.status === 'SUCCESS') {
       setPaymentStatus('success')
       toast({
         title: "Payment Successful",
-        description: `Transaction ID: ${callbackData.transactionId}, Amount: ${callbackData.amount}`,
+        description: `Transaction ID: ${callbackData.mcTrxId}, Amount: ${callbackData.totalAmount}`,
       })
-    } else if (callbackData.respCode === '01') {
+    } else if (callbackData.status === 'ERROR') {
       setPaymentStatus('declined')
       toast({
         title: "Payment Declined",
-        description: callbackData.respMessage,
+        description: callbackData.errorMessage,
       })
     }
 

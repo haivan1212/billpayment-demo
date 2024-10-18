@@ -8,22 +8,26 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { Button } from "@/components/ui/button"
 
 interface PaymentCallback {
-  trxId: string
-  transactionId: string
+  mcTrxId: string
+  ofTrxId: string
   referenceText: string
+  trxDate: string
+  createdDate: string
+  merchantCode: string
   userId: string
   serviceCode: string
   providerCode: string
   providerName: string
-  amount: number
+  billAmount: number
+  totalAmount: number
+  feeAmount: number
   billNo: string
   billId: string
   billCycle: string
   billName: string
   billAddress: string
-  additionalData: string
-  respCode: string
-  respMessage: string
+  status: string
+  errorMessage: string
 }
 
 export default function PaymentResultPage() {
@@ -125,13 +129,13 @@ export default function PaymentResultPage() {
       <CardContent>
         <dl className="grid grid-cols-2 gap-4">
           <dt className="font-semibold">Status:</dt>
-          <dd>{paymentResult.respCode === '00' ? 'Success' : 'Failed'}</dd>
+          <dd>{paymentResult.status === 'SUCCESS' ? 'Success' : 'Failed'}</dd>
           <dt className="font-semibold">Message:</dt>
-          <dd>{paymentResult.respMessage}</dd>
+          <dd>{paymentResult.errorMessage}</dd>
           <dt className="font-semibold">Amount:</dt>
-          <dd>{paymentResult.amount.toLocaleString()}</dd>
+          <dd>{paymentResult.totalAmount.toLocaleString()}</dd>
           <dt className="font-semibold">Transaction ID:</dt>
-          <dd>{paymentResult.transactionId}</dd>
+          <dd>{paymentResult.mcTrxId}</dd>
           <dt className="font-semibold">Bill Number:</dt>
           <dd>{paymentResult.billNo}</dd>
           <dt className="font-semibold">Bill Name:</dt>
@@ -146,8 +150,6 @@ export default function PaymentResultPage() {
           <dd>{paymentResult.userId}</dd>
           <dt className="font-semibold">Bill Address:</dt>
           <dd>{paymentResult.billAddress}</dd>
-          <dt className="font-semibold">Additional Data:</dt>
-          <dd>{paymentResult.additionalData}</dd>
         </dl>
       </CardContent>
       <CardFooter>
